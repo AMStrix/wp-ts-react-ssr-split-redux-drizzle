@@ -170,13 +170,13 @@ const fileLoaderServer = {
 const externalCssLoaderClient = {
   test: /\.css$/,
   include: /node_modules/,
-  use: [MiniCssExtractPlugin.loader, 'css-loader'],
+  use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader'],
 };
 
 const externalLessLoaderClient = {
   test: /\.less$/,
   include: /node_modules/,
-  use: [MiniCssExtractPlugin.loader, 'css-loader', lessLoader],
+  use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', lessLoader],
 };
 
 // Server build needs a loader to handle external .css files
