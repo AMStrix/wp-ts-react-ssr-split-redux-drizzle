@@ -13,6 +13,9 @@ import { configureStore } from '../shared/store';
 import Html from './components/HTML';
 import App from '../shared/App';
 
+// react-router recommends agains redux - router integration, perhaps remove?
+// https://reacttraining.com/react-router/web/guides/redux-integration
+
 const serverRenderer = () => async (req: Request, res: Response) => {
   const history = createMemoryHistory({
     initialEntries: [req.url],
@@ -21,6 +24,7 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     initialState: undefined,
     middleware: [routerMiddleware(history)],
   });
+
   const sheet = new ServerStyleSheet();
   const reactApp = (
     <Provider store={store}>
@@ -32,8 +36,16 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     </Provider>
   );
 
+  let loadableState;
   // 1. loadable state will render dynamic imports
-  const loadableState = await getLoadableState(reactApp);
+  try {
+    loadableState = await getLoadableState(reactApp);
+  } catch (e) {
+    const disp = `Error getting loadable state for SSR`;
+    console.log(disp);
+    console.log(e);
+    return res.send(disp + ' (more info in server logs)');
+  }
   // 2. styled components will gather styles & wrap in provider
   const styleConnectedApp = sheet.collectStyles(reactApp);
 
