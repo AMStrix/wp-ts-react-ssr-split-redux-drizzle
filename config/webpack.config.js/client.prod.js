@@ -1,9 +1,18 @@
 const baseConfig = require('./client.base');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
-    ...baseConfig,
-    mode: 'production',
-    devtool: 'source-map',
+  ...baseConfig,
+  plugins: [
+    ...baseConfig.plugins,
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      reportFilename: '../../prod-client-bundle-analysis.html',
+      defaultSizes: 'gzip',
+    }),
+  ],
+  mode: 'production',
+  devtool: 'source-map',
 };
 
 config.output.filename = 'bundle.[hash:8].js';

@@ -81,23 +81,11 @@ const start = async () => {
 
   const clientCompiler = multiCompiler.compilers[0];
   const serverCompiler = multiCompiler.compilers[1];
-  serverCompiler.hooks.watchRun.tap('_', () =>
-    logMessage('Server (watchRun)', 'warning'),
-  ); // works, same timing as compile (but might not compile)
-  serverCompiler.hooks.beforeRun.tap('_', () =>
-    logMessage('Server (beforeRun)', 'warning'),
-  ); // ?
   serverCompiler.hooks.compile.tap('_', () =>
-    logMessage('Server is compiling...', 'warning'),
+    logMessage('Server is compiling...', 'info'),
   );
-  serverCompiler.hooks.watchRun.tap('_', () =>
-    logMessage('Client (watchRun)', 'warning'),
-  ); // works, same timing as compile (but might not compile)
-  serverCompiler.hooks.beforeRun.tap('_', () =>
-    logMessage('Client (beforeRun)', 'warning'),
-  ); // ?
   clientCompiler.hooks.compile.tap('_', () =>
-    logMessage('Client is compiling...', 'warning'),
+    logMessage('Client is compiling...', 'info'),
   );
 
   const clientInitialBuild = compilerPromise(clientCompiler);
