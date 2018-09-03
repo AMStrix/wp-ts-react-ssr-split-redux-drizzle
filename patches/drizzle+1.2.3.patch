@@ -1,0 +1,30 @@
+patch-package
+--- a/node_modules/drizzle/drizzle.js
++++ b/node_modules/drizzle/drizzle.js
+@@ -1,3 +1,6 @@
++// patched using pack-package
++// info: https://github.com/trufflesuite/drizzle/issues/104
++
+ (function webpackUniversalModuleDefinition(root, factory) {
+ 	if(typeof exports === 'object' && typeof module === 'object')
+ 		module.exports = factory(require("deepmerge"), require("eth-block-tracker-es5"), require("is-plain-object"), require("redux"), require("redux-saga"), require("web3"));
+@@ -7,7 +10,7 @@
+ 		exports["drizzle"] = factory(require("deepmerge"), require("eth-block-tracker-es5"), require("is-plain-object"), require("redux"), require("redux-saga"), require("web3"));
+ 	else
+ 		root["drizzle"] = factory(root["deepmerge"], root["eth-block-tracker-es5"], root["is-plain-object"], root["redux"], root["redux-saga"], root["web3"]);
+-})(window, function(__WEBPACK_EXTERNAL_MODULE_deepmerge__, __WEBPACK_EXTERNAL_MODULE_eth_block_tracker__, __WEBPACK_EXTERNAL_MODULE_is_plain_object__, __WEBPACK_EXTERNAL_MODULE_redux__, __WEBPACK_EXTERNAL_MODULE_redux_saga__, __WEBPACK_EXTERNAL_MODULE_web3__) {
++})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_deepmerge__, __WEBPACK_EXTERNAL_MODULE_eth_block_tracker__, __WEBPACK_EXTERNAL_MODULE_is_plain_object__, __WEBPACK_EXTERNAL_MODULE_redux__, __WEBPACK_EXTERNAL_MODULE_redux_saga__, __WEBPACK_EXTERNAL_MODULE_web3__) {
+ return /******/ (function(modules) { // webpackBootstrap
+ /******/ 	// The module cache
+ /******/ 	var installedModules = {};
+@@ -5333,7 +5336,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
+ 
+ // Load as promise so that async Drizzle initialization can still resolve
+ var windowPromise = new _promise2.default(function (resolve, reject) {
+-  window.addEventListener('load', resolve);
++  if (typeof window !== 'undefined') {
++    window.addEventListener('load', resolve);
++  }
+ });
+ 
+ var Drizzle = function () {

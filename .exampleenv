@@ -1,0 +1,11 @@
+# NODE_ENV must be set, possible env files:
+# .env.NODE_ENV.local
+# .env.NODE_ENV
+# .env.local
+# .env
+
+# Server port (webpack HMR runs on PORT + 1)
+PORT=3000
+
+# Funds these addresses when `npm run truffle` runs. Comma separated.
+# FUND_ETH_ADDRESSES=

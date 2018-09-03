@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es5",
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "removeComments": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "lib": ["es5", "es2015", "es6", "es7", "dom"],
+    "baseUrl": "src",
+    "paths": {
+      "contracts/*": ["../build/contracts/*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}
