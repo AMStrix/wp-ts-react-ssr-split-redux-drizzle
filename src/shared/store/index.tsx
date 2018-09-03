@@ -37,6 +37,7 @@ export const configureStore = (
   );
 
   sagaMiddleware.run(rootSaga);
+  // tslint:disable-next-line:no-unused-expression
   new Drizzle(drizzleOptions, store); // init drizzle
 
   if (process.env.NODE_ENV !== 'production') {

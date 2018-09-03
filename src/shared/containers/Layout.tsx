@@ -1,41 +1,51 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Layout as AntdLayout, Menu, Icon } from 'antd';
-const { Header, Content, Sider } = AntdLayout;
+import { Layout as AntdLayout, Menu, Icon, Breadcrumb } from 'antd';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
+const { Header, Content, Footer } = AntdLayout;
 
-export interface Props {
-  location: string;
-}
+import routes, { byPath } from '../routes';
 
-class LayoutImpl extends React.Component<Props> {
+class Layout extends React.Component<RouteComponentProps<any>> {
   render() {
+    // console.log(JSON.stringify(this.props, null, 2));
+    const {
+      location: { pathname },
+    } = this.props;
+    const route = byPath[pathname];
     return (
       <AntdLayout>
-        <Sider style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
-          <Menu theme="dark" mode="inline">
-            <Menu.Item key="1">
-              <Icon type="user" />
-              <span className="nav-text">user</span>
-            </Menu.Item>
+        <Header>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            style={{ lineHeight: '64px' }}
+            selectedKeys={[pathname]}
+          >
+            {routes.map(r => (
+              <Menu.Item key={r.path}>
+                <Link to={r.path}>
+                  {r.icon && <Icon type={r.icon} />}
+                  {r.disp}
+                </Link>
+              </Menu.Item>
+            ))}
           </Menu>
-        </Sider>
-        <AntdLayout style={{ marginLeft: 200 }}>
-          <Header style={{ background: '#fff', padding: 0 }} />
-          <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div style={{ padding: 24, background: '#fff' }}>{this.props.children}</div>
-          </Content>
-        </AntdLayout>
+        </Header>
+        <Content style={{ padding: '0 50px' }}>
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>{route.disp}</Breadcrumb.Item>
+          </Breadcrumb>
+          <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+            {this.props.children}
+          </div>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>Footer ©2018</Footer>
       </AntdLayout>
     );
   }
 }
 
-const stateToProps = ({ router }: any) => {
-  return {
-    location: 'test',
-  };
-};
-
-const Layout = connect(stateToProps)(LayoutImpl);
-
-export default Layout;
+const mapStateToProps = (state: any) => ({ state });
+export default connect(mapStateToProps)(withRouter(Layout));
