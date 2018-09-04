@@ -13,7 +13,12 @@
 * css & less support
 * i18next
 
-Requires *Node v8* & *yarn*
+### Current issues
+* HMR sometimes gets confused by updates to dynamically imported (split) modules. Looking into a fix.
+* SSR in dev mode doesn't reference styles initially, so there is an ugly moment until the css gets pulled. (not an issue in prod build) (react-universal-components may be a solution)
+* Full vendor CSS is bundled so SSR can reference it. Avoiding no style initial loads. Looking into https://github.com/faceyspacey/react-universal-component as a fix.
+
+Requires **Node v8** & **yarn**
 
 Steps to bring up dev server:
 ```
@@ -31,14 +36,15 @@ yarn dev     // console 2
 `yarn truffle` truffle compile & migrate  
 
 #### Development Server Details   
-**client** code is watched & served (HMR) by an express server with webpack-dev-middleware and webpack-hot-middleware.  
-**server** code is watched by the webpack compiler.  
-the **server** is run via nodemon api, restarting on changes & awaiting updates on crashes.  
+* **contracts** On initial run the dev server will attempt to connect to ganache, retrieve the net id & check the contracts for matching ids - it will compile & migrate if files are missing or don't have the current net id.
+* **client** code is watched & served (HMR) by an express server with webpack-dev-middleware and webpack-hot-middleware.  
+* **server** code is watched by a webpack compiler.  
+* the **server** is run via nodemon api, restarting on changes & awaiting updates on crashes.  
 
 #### Notes  
 drizzle expects the window global, which is a problem for SSR. Therefore we have used patch-package 
 (& postinstall-postinstall, for yarn) to patch the drizzle node_module upon install, add & remove.
 
-If the server throws window undefined errors, run the following command & re- `yarn build` or `yarn dev`.  
+If the server throws window undefined errors, run the following command:   
 `yarn patch-package`  
 This will re-apply any module patches from the patches directory.
