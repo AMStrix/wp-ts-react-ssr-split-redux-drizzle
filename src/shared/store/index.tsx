@@ -36,9 +36,11 @@ export const configureStore = (
     composeEnhancers(applyMiddleware(...middleware.concat(extraMiddleware))),
   );
 
-  sagaMiddleware.run(rootSaga).done.catch(e => {
+  let sagaTask = sagaMiddleware.run(rootSaga);
+  sagaTask.done.catch(e => {
     console.log('rootSaga error', e.message);
   });
+
   // tslint:disable-next-line:no-unused-expression
   new Drizzle(drizzleOptions, store); // init drizzle
 
@@ -47,6 +49,12 @@ export const configureStore = (
       module.hot.accept('./rootReducer', () =>
         store.replaceReducer(require('./rootReducer').default),
       );
+      module.hot.accept('./rootSaga', () => {
+        sagaTask.cancel();
+        sagaTask.done.then(() => {
+          sagaTask = sagaMiddleware.run(require('./rootSaga').default);
+        });
+      });
     }
   }
 
