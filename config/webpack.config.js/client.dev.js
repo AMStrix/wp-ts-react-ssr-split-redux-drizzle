@@ -11,7 +11,7 @@ const config = {
     new webpack.HotModuleReplacementPlugin(),
     ...baseConfig.plugins,
     new ForkTsCheckerWebpackPlugin(),
-    new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin({ openAnalyzer: false }),
   ],
   mode: 'development',
   devtool: 'cheap-module-inline-source-map',

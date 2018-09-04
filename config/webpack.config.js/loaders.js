@@ -1,5 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const babelPresets = [
   '@babel/react',
   // '@babel/typescript',
@@ -35,7 +37,7 @@ const tsBabelLoaderClient = {
     },
     {
       loader: 'ts-loader',
-      options: { transpileOnly: process.env.NODE_ENV === 'development' },
+      options: { transpileOnly: isDev },
     },
   ],
 };
@@ -59,7 +61,7 @@ const tsBabelLoaderServer = {
     },
     {
       loader: 'ts-loader',
-      options: { transpileOnly: process.env.NODE_ENV === 'development' },
+      options: { transpileOnly: isDev },
     },
   ],
 };
@@ -68,7 +70,7 @@ const cssLoaderClient = {
   test: /\.css$/,
   exclude: /node_modules/,
   use: [
-    'css-hot-loader',
+    isDev && 'style-loader',
     MiniCssExtractPlugin.loader,
     {
       loader: 'css-loader',
@@ -86,7 +88,7 @@ const cssLoaderClient = {
         sourceMap: true,
       },
     },
-  ],
+  ].filter(Boolean),
 };
 
 const lessLoaderClient = {
@@ -170,13 +172,20 @@ const fileLoaderServer = {
 const externalCssLoaderClient = {
   test: /\.css$/,
   include: /node_modules/,
-  use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader'],
+  use: [isDev && 'style-loader', MiniCssExtractPlugin.loader, 'css-loader'].filter(
+    Boolean,
+  ),
 };
 
 const externalLessLoaderClient = {
   test: /\.less$/,
   include: /node_modules/,
-  use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', lessLoader],
+  use: [
+    isDev && 'style-loader',
+    MiniCssExtractPlugin.loader,
+    'css-loader',
+    lessLoader,
+  ].filter(Boolean),
 };
 
 // Server build needs a loader to handle external .css files

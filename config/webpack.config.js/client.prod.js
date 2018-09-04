@@ -9,6 +9,7 @@ const config = {
       analyzerMode: 'static',
       reportFilename: '../../prod-client-bundle-analysis.html',
       defaultSizes: 'gzip',
+      openAnalyzer: false,
     }),
   ],
   mode: 'production',
