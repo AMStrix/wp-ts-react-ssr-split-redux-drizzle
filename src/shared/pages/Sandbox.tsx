@@ -1,14 +1,20 @@
 import React from 'react';
 import { translate } from 'react-i18next';
-import { Style, ReactLogo, A, B, C } from './Sandbox.styled';
 import { Card } from 'antd';
+import Helmet from 'react-helmet';
+
+import { Style, ReactLogo, A, B, C } from './Sandbox.styled';
 import css from './Sandbox.css';
 
-class Home extends React.Component<any> {
+class Sandbox extends React.Component<any> {
   render() {
     const { t } = this.props;
     return (
       <Style>
+        <Helmet>
+          <title>Sandbox</title>
+          <meta name="sandbox page" content="sandbox page stuff" />
+        </Helmet>
         <Card title="Translated Text">
           <p>"{t('features')}"</p>
         </Card>
@@ -30,4 +36,4 @@ class Home extends React.Component<any> {
   }
 }
 
-export default translate()(Home);
+export default translate()(Sandbox);
