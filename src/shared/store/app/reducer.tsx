@@ -1,7 +1,7 @@
 import { ActionTypes } from './actions';
 
 export const initialState: any = Object.freeze({
-  locale: 'en-US',
+  locale: 'de-DE',
 });
 
 export default (state: any = initialState, action: any): any => {

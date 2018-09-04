@@ -1,7 +1,7 @@
 import loadable from 'loadable-components';
 // import MC from './pages/MetaCoin';
 export const Home = loadable(() => import('./pages/Home'));
-export const Features = loadable(() => import('./pages/Features'));
+export const Sandbox = loadable(() => import('./pages/Sandbox'));
 export const MetaCoin = loadable(() => import('./pages/MetaCoin'));
 
 interface Route {
@@ -25,11 +25,11 @@ const routes: Route[] = [
     component: Home,
   },
   {
-    disp: 'Features',
-    icon: 'dashboard',
-    path: '/features',
+    disp: 'Sandbox',
+    icon: 'layout',
+    path: '/sandbox',
     exact: false,
-    component: Features,
+    component: Sandbox,
   },
   {
     disp: 'MetaCoin',

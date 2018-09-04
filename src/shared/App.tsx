@@ -1,9 +1,9 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { translate } from 'react-i18next';
-import { Switch, Route } from 'react-router';
+import { Switch, Route, Redirect } from 'react-router';
 
-import { Home, Features, MetaCoin } from './routes';
+import { Home, Sandbox, MetaCoin } from './routes';
 import Layout from './containers/Layout';
 
 class App extends React.Component<any> {
@@ -12,8 +12,9 @@ class App extends React.Component<any> {
       <Layout>
         <Switch>
           <Route exact={true} path="/" component={Home} />
-          <Route path="/features" component={Features} />
+          <Route path="/sandbox" component={Sandbox} />
           <Route path="/metacoin" component={MetaCoin} />
+          <Route path="/*" render={() => <Redirect to="/" />} />
         </Switch>
       </Layout>
     );
