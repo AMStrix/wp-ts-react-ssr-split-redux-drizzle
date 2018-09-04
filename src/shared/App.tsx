@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { hot } from 'react-hot-loader';
 import { translate } from 'react-i18next';
 import { Switch, Route } from 'react-router';
 
@@ -20,5 +20,4 @@ class App extends React.Component<any> {
   }
 }
 
-const mapStateToProps = (state: any) => ({ state });
-export default connect(mapStateToProps)(translate()(App));
+export default hot(module)(translate()(App));

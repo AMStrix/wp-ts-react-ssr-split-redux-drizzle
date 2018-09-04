@@ -1,5 +1,5 @@
 import loadable from 'loadable-components';
-
+// import MC from './pages/MetaCoin';
 export const Home = loadable(() => import('./pages/Home'));
 export const Features = loadable(() => import('./pages/Features'));
 export const MetaCoin = loadable(() => import('./pages/MetaCoin'));

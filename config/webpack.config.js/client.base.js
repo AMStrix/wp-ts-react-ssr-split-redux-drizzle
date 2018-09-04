@@ -28,20 +28,20 @@ module.exports = {
     tls: 'empty',
     child_process: 'empty',
   },
-  optimization: {
-    namedModules: true,
-    noEmitOnErrors: true,
-    // concatenateModules: true,
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   namedModules: true,
+  //   noEmitOnErrors: true,
+  //   // concatenateModules: true,
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       commons: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendor',
+  //         chunks: 'all',
+  //       },
+  //     },
+  //   },
+  // },
   stats: {
     cached: false,
     cachedAssets: false,

@@ -4,7 +4,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const babelPresets = [
   '@babel/react',
-  // '@babel/typescript',
+  // '@babel/typescript', (using ts-loader)
   ['@babel/env', { modules: false }],
 ];
 
@@ -22,6 +22,7 @@ const tsBabelLoaderClient = {
         plugins: [
           'dynamic-import-webpack', // for client
           'loadable-components/babel',
+          'react-hot-loader/babel',
           ['styled-components', { ssr: true }],
           '@babel/plugin-proposal-object-rest-spread',
           '@babel/plugin-proposal-class-properties',
@@ -71,7 +72,7 @@ const cssLoaderClient = {
   exclude: /node_modules/,
   use: [
     isDev && 'style-loader',
-    MiniCssExtractPlugin.loader,
+    !isDev && MiniCssExtractPlugin.loader,
     {
       loader: 'css-loader',
       options: {
@@ -172,9 +173,11 @@ const fileLoaderServer = {
 const externalCssLoaderClient = {
   test: /\.css$/,
   include: /node_modules/,
-  use: [isDev && 'style-loader', MiniCssExtractPlugin.loader, 'css-loader'].filter(
-    Boolean,
-  ),
+  use: [
+    isDev && 'style-loader',
+    !isDev && MiniCssExtractPlugin.loader,
+    'css-loader',
+  ].filter(Boolean),
 };
 
 const externalLessLoaderClient = {
@@ -182,7 +185,7 @@ const externalLessLoaderClient = {
   include: /node_modules/,
   use: [
     isDev && 'style-loader',
-    MiniCssExtractPlugin.loader,
+    !isDev && MiniCssExtractPlugin.loader,
     'css-loader',
     lessLoader,
   ].filter(Boolean),
