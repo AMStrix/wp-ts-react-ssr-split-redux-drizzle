@@ -36,7 +36,9 @@ export const configureStore = (
     composeEnhancers(applyMiddleware(...middleware.concat(extraMiddleware))),
   );
 
-  sagaMiddleware.run(rootSaga);
+  sagaMiddleware.run(rootSaga).done.catch(e => {
+    console.log('rootSaga error', e.message);
+  });
   // tslint:disable-next-line:no-unused-expression
   new Drizzle(drizzleOptions, store); // init drizzle
 

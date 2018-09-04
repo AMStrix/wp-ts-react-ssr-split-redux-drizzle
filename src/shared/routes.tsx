@@ -1,7 +1,8 @@
 import loadable from 'loadable-components';
 
 export const Home = loadable(() => import('./pages/Home'));
-export const Status = loadable(() => import('./pages/Status'));
+export const Features = loadable(() => import('./pages/Features'));
+export const MetaCoin = loadable(() => import('./pages/MetaCoin'));
 
 interface Route {
   disp: string;
@@ -24,11 +25,18 @@ const routes: Route[] = [
     component: Home,
   },
   {
-    disp: 'Status',
+    disp: 'Features',
     icon: 'dashboard',
-    path: '/status',
+    path: '/features',
     exact: false,
-    component: Status,
+    component: Features,
+  },
+  {
+    disp: 'MetaCoin',
+    icon: 'copyright',
+    path: '/metacoin',
+    exact: false,
+    component: MetaCoin,
   },
 ];
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Switch, Route } from 'react-router';
 
-import { Home, Status } from './routes';
+import { Home, Features, MetaCoin } from './routes';
 import Layout from './containers/Layout';
 
 class App extends React.Component<any> {
@@ -12,7 +12,8 @@ class App extends React.Component<any> {
       <Layout>
         <Switch>
           <Route exact={true} path="/" component={Home} />
-          <Route path="/status" component={Status} />
+          <Route path="/features" component={Features} />
+          <Route path="/metacoin" component={MetaCoin} />
         </Switch>
       </Layout>
     );
