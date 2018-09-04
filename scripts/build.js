@@ -21,14 +21,16 @@ const build = async () => {
   const serverPromise = compilerPromise(serverCompiler);
 
   serverCompiler.run((error, stats) => {
-    if (!error && !stats.hasErrors()) {
+    error && console.log(error);
+    if (stats) {
       console.log(stats.toString(serverConfig.stats));
       return;
     }
   });
 
   clientCompiler.run((error, stats) => {
-    if (!error && !stats.hasErrors()) {
+    error && console.log(error);
+    if (stats) {
       console.log(stats.toString(clientConfig.stats));
       return;
     }
@@ -37,12 +39,17 @@ const build = async () => {
   // wait until client and server are compiled
   try {
     await serverPromise;
-    await clientPromise;
-    logMessage('Done!', 'info');
-    // process.exit();
+    logMessage('Server done!', 'info');
   } catch (error) {
-    logMessage(error, 'error');
-    // process.exit(1);
+    logMessage('Error compiling server: ', 'error');
+    console.log(error);
+  }
+  try {
+    await clientPromise;
+    logMessage('Client done!', 'info');
+  } catch (error) {
+    logMessage('Error compiling client: ', 'error');
+    console.log(error);
   }
 };
 
