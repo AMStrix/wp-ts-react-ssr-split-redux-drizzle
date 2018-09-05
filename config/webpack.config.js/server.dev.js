@@ -5,12 +5,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const config = {
   ...baseConfig,
-  plugins: [
-    new WriteFileWebpackPlugin(),
-    ...baseConfig.plugins,
-    new webpack.HotModuleReplacementPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
-  ],
+  plugins: [...baseConfig.plugins, new ForkTsCheckerWebpackPlugin()],
   mode: 'development',
   performance: {
     hints: false,
