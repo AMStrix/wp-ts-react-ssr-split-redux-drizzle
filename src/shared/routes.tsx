@@ -1,8 +1,9 @@
-import loadable from 'loadable-components';
+// import loadable from 'loadable-components';
+import universal from 'react-universal-component';
 // import MC from './pages/MetaCoin';
-export const Home = loadable(() => import('./pages/Home'));
-export const Sandbox = loadable(() => import('./pages/Sandbox'));
-export const MetaCoin = loadable(() => import('./pages/MetaCoin'));
+export const Home = universal(import('./pages/Home'));
+export const Sandbox = universal(import('./pages/Sandbox'));
+export const MetaCoin = universal(import('./pages/MetaCoin'));
 
 interface Route {
   disp: string;

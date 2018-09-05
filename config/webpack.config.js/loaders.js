@@ -1,4 +1,5 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -21,7 +22,8 @@ const tsBabelLoaderClient = {
       options: {
         plugins: [
           'dynamic-import-webpack', // for client
-          'loadable-components/babel',
+          // 'loadable-components/babel',
+          'universal-import',
           'react-hot-loader/babel',
           ['styled-components', { ssr: true }],
           '@babel/plugin-proposal-object-rest-spread',
@@ -50,9 +52,10 @@ const tsBabelLoaderServer = {
       loader: 'babel-loader',
       options: {
         plugins: [
-          'loadable-components/babel',
-          ['styled-components', { ssr: true }],
+          'universal-import',
+          // 'loadable-components/babel',
           'dynamic-import-node', // for server
+          ['styled-components', { ssr: true }],
           '@babel/plugin-proposal-object-rest-spread',
           '@babel/plugin-proposal-class-properties',
           ['import', { libraryName: 'antd', style: true }],
@@ -71,8 +74,7 @@ const cssLoaderClient = {
   test: /\.css$/,
   exclude: /node_modules/,
   use: [
-    isDev && 'style-loader',
-    !isDev && MiniCssExtractPlugin.loader,
+    ExtractCssChunks.loader,
     {
       loader: 'css-loader',
       options: {
@@ -173,22 +175,13 @@ const fileLoaderServer = {
 const externalCssLoaderClient = {
   test: /\.css$/,
   include: /node_modules/,
-  use: [
-    isDev && 'style-loader',
-    !isDev && MiniCssExtractPlugin.loader,
-    'css-loader',
-  ].filter(Boolean),
+  use: [ExtractCssChunks.loader, 'css-loader'],
 };
 
 const externalLessLoaderClient = {
   test: /\.less$/,
   include: /node_modules/,
-  use: [
-    isDev && 'style-loader',
-    !isDev && MiniCssExtractPlugin.loader,
-    'css-loader',
-    lessLoader,
-  ].filter(Boolean),
+  use: [...externalCssLoaderClient.use, lessLoader],
 };
 
 // Server build needs a loader to handle external .css files

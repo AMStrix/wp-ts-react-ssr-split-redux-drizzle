@@ -1,6 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import { translate } from 'react-i18next';
 import { Switch, Route, Redirect } from 'react-router';
 
 import { Home, Sandbox, MetaCoin } from './routes';
@@ -21,4 +20,4 @@ class App extends React.Component<any> {
   }
 }
 
-export default hot(module)(translate()(App));
+export default hot(module)(App);
