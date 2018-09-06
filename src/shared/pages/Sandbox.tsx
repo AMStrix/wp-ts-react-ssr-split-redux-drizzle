@@ -3,8 +3,9 @@ import { translate } from 'react-i18next';
 import { Card } from 'antd';
 import Helmet from 'react-helmet';
 
-import { Style, ReactLogo, A, B, C } from './Sandbox.styled';
+import { Style, A, B, C } from './Sandbox.styled';
 import css from './Sandbox.css';
+import ReactLogo from '../assets/react.svg';
 
 class Sandbox extends React.Component<any> {
   render() {
@@ -19,7 +20,7 @@ class Sandbox extends React.Component<any> {
           <p>"{t('features')}"</p>
         </Card>
         <Card title="SVG">
-          <ReactLogo src={require('../assets/react.svg')} />
+          <ReactLogo />
         </Card>
         <Card title="CSS">
           <span className={css.a}>Styled</span>
