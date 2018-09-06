@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -127,7 +128,7 @@ const lessLoaderServer = {
 };
 
 const urlLoaderClient = {
-  test: /\.(png|jpe?g|gif|svg)$/,
+  test: /\.(png|jpe?g|gif)$/,
   loader: require.resolve('url-loader'),
   options: {
     limit: 2048,
@@ -144,6 +145,7 @@ const urlLoaderServer = {
 };
 
 const fileLoaderClient = {
+  // WARNING: this will catch all files except those below
   exclude: [/\.(js|ts|tsx|css|less|mjs|html|json|ejs)$/],
   use: [
     {
@@ -155,19 +157,28 @@ const fileLoaderClient = {
   ],
 };
 
-const fileLoaderServer = {
-  // WARNING: this will catch all files except those below
-  exclude: [/\.(js|ts|tsx|css|less|mjs|html|json|ejs)$/],
+const fileLoaderServer = _.defaultsDeep(
+  {
+    use: [{ options: { emitFile: false } }],
+  },
+  fileLoaderClient,
+);
+
+const svgLoaderClient = {
+  test: /\.svg$/,
   use: [
     {
-      loader: 'file-loader',
+      loader: '@svgr/webpack',
       options: {
-        name: 'assets/[name].[hash:8].[ext]',
-        emitFile: false,
+        svgoConfig: {
+          plugins: [{ inlineStyles: { onlyMatchedOnce: false } }],
+        },
       },
     },
-  ],
+  ], // svg -> react component
 };
+
+const svgLoaderServer = svgLoaderClient;
 
 // Write css files from node_modules to its own vendor.css file
 const externalCssLoaderClient = {
@@ -211,6 +222,7 @@ const client = [
       tsBabelLoaderClient,
       cssLoaderClient,
       lessLoaderClient,
+      svgLoaderClient,
       urlLoaderClient,
       fileLoaderClient,
       externalCssLoaderClient,
@@ -226,6 +238,7 @@ const server = [
       tsBabelLoaderServer,
       cssLoaderServer,
       lessLoaderServer,
+      svgLoaderServer,
       urlLoaderServer,
       fileLoaderServer,
       externalCssLoaderServer,
