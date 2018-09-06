@@ -14,7 +14,6 @@ class Home extends React.Component<any> {
           <meta name="home page" content="home page stuff" />
         </Helmet>
         <EthInit />
-        {/* <pre>{JSON.stringify(this.props.state, null, 2)}</pre> */}
       </div>
     );
   }

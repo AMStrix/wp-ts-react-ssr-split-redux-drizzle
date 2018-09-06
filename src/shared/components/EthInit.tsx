@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Steps, Icon } from 'antd';
 const { Step } = Steps;
+
 class EthInit extends React.Component<any> {
   render() {
     const {
