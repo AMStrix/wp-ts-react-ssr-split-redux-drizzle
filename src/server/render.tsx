@@ -10,6 +10,7 @@ import { createMemoryHistory } from 'history';
 import { routerMiddleware } from 'react-router-redux';
 
 import { configureStore } from '../shared/store';
+import DrizzleContext from '../shared/DrizzleContext';
 import Html from './components/HTML';
 import App from '../shared/App';
 
@@ -28,11 +29,13 @@ const serverRenderer = () => async (req: Request, res: Response) => {
   const sheet = new ServerStyleSheet();
   const reactApp = (
     <Provider store={store}>
-      <Router location={req.url} context={{}}>
-        <IntlProvider>
-          <App />
-        </IntlProvider>
-      </Router>
+      <DrizzleContext.Provider store={store}>
+        <Router location={req.url} context={{}}>
+          <IntlProvider>
+            <App />
+          </IntlProvider>
+        </Router>
+      </DrizzleContext.Provider>
     </Provider>
   );
 

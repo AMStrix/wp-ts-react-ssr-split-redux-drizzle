@@ -2,9 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
-import { Drizzle } from 'drizzle';
 
-import drizzleOptions from './drizzleOptions';
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 
@@ -40,9 +38,6 @@ export const configureStore = (
   sagaTask.done.catch(e => {
     console.log('rootSaga error', e.message);
   });
-
-  // tslint:disable-next-line:no-unused-expression
-  new Drizzle(drizzleOptions, store); // init drizzle
 
   if (process.env.NODE_ENV !== 'production') {
     if (module.hot) {

@@ -4,7 +4,12 @@ import MetaCoin from 'contracts/MetaCoin.json';
 
 export const options = {
   contracts: [MetaCoin],
-  web3: {},
+  polls: {
+    blocks: 3000,
+    accounts: 3000,
+  },
+  // if fallback not set, drizzle will try local
+  web3: { fallback: null },
   events: [],
 };
 

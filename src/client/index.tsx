@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { loadComponents } from 'loadable-components';
 import { ConnectedRouter as Router, routerMiddleware } from 'react-router-redux';
 import IntlProvider from '../shared/i18n/IntlProvider';
+import DrizzleContext from '../shared/DrizzleContext';
 
 import { configureStore } from '../shared/store';
 import App from '../shared/App';
@@ -21,11 +22,13 @@ const store =
 loadComponents().then(() => {
   hydrate(
     <Provider store={store}>
-      <Router history={browserHistory}>
-        <IntlProvider>
-          <App />
-        </IntlProvider>
-      </Router>
+      <DrizzleContext.Provider store={store}>
+        <Router history={browserHistory}>
+          <IntlProvider>
+            <App />
+          </IntlProvider>
+        </Router>
+      </DrizzleContext.Provider>
     </Provider>,
     document.getElementById('app'),
   );
