@@ -21,7 +21,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "tslint --project ./tsconfig.json --config ./tslint.json -e \"**/build/**\"",
     "test:update": "yarn test --updateSnapshot",
-    "ganache": "ganache-cli -b 5",
+    "ganache": "ganache-cli -d -b 5",
     "truffle": "cross-env NODE_ENV=development truffle exec ./scripts/init-truffle.js && truffle console"
   },
   "husky": {
