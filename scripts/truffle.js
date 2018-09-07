@@ -116,7 +116,7 @@ const fundWeb3v1 = (module.exports.fundWeb3v1 = () => {
     ? process.env.FUND_ETH_ADDRESSES.split(',').map(a => a.trim())
     : [];
   const web3 = createWeb3();
-  web3.eth.getAccounts().then(accts => {
+  return web3.eth.getAccounts().then(accts => {
     if (ethAccounts.length) {
       logMessage('Sending 50% of ETH balance from accounts...', 'info');
       const txs = ethAccounts.map((addr, i) => {
@@ -138,7 +138,7 @@ const fundWeb3v1 = (module.exports.fundWeb3v1 = () => {
               );
           });
       });
-      Promise.all(txs).then(() => web3.currentProvider.connection.close());
+      return Promise.all(txs).then(() => web3.currentProvider.connection.close());
     } else {
       logMessage('No accounts specified for funding in .env file...', 'warning');
     }

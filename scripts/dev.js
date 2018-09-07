@@ -10,13 +10,13 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const express = require('express');
 const paths = require('../config/paths');
 const truffle = require('../scripts/truffle');
-const { logMessage, compilerPromise } = require('./utils');
+const { logMessage } = require('./utils');
 
 const app = express();
 
 const WEBPACK_PORT =
   process.env.WEBPACK_PORT ||
-  (!isNaN(Number(process.env.PORT)) ? Number(process.env.PORT) + 1 : 8501);
+  (!isNaN(Number(process.env.PORT)) ? Number(process.env.PORT) + 1 : 3001);
 
 const start = async () => {
   rimraf.sync(paths.clientBuild);
@@ -34,28 +34,15 @@ const start = async () => {
   clientConfig.output.hotUpdateChunkFilename = 'updates/[id].[hash].hot-update.js';
 
   const publicPath = clientConfig.output.publicPath;
-
-  clientConfig.output.publicPath = [`http://localhost:${WEBPACK_PORT}`, publicPath]
-    .join('/')
-    .replace(/([^:+])\/+/g, '$1/');
-
-  serverConfig.output.publicPath = [`http://localhost:${WEBPACK_PORT}`, publicPath]
-    .join('/')
-    .replace(/([^:+])\/+/g, '$1/');
+  clientConfig.output.publicPath = `http://localhost:${WEBPACK_PORT}${publicPath}`;
+  serverConfig.output.publicPath = `http://localhost:${WEBPACK_PORT}${publicPath}`;
 
   const multiCompiler = webpack([clientConfig, serverConfig]);
-
   const clientCompiler = multiCompiler.compilers[0];
   const serverCompiler = multiCompiler.compilers[1];
-  serverCompiler.hooks.compile.tap('_', () =>
-    logMessage('Server is compiling...', 'info'),
-  );
-  clientCompiler.hooks.compile.tap('_', () =>
-    logMessage('Client is compiling...', 'info'),
-  );
 
-  const clientInitialBuild = compilerPromise(clientCompiler);
-  const serverInitialBuild = compilerPromise(serverCompiler);
+  serverCompiler.hooks.compile.tap('_', () => logMessage('Server compiling...', 'info'));
+  clientCompiler.hooks.compile.tap('_', () => logMessage('Client compiling...', 'info'));
 
   const watchOptions = {
     // poll: true,
@@ -68,48 +55,18 @@ const start = async () => {
     return next();
   });
 
-  app.use(
-    webpackDevMiddleware(clientCompiler, {
-      publicPath: clientConfig.output.publicPath,
-      stats: clientConfig.stats,
-      watchOptions,
-    }),
-  );
-
-  app.use(webpackHotMiddleware(clientCompiler));
-
-  app.use('/static', express.static(paths.clientBuild));
-
-  const clientDevServer = app.listen(WEBPACK_PORT);
-
-  const serverWatcher = serverCompiler.watch(watchOptions, (error, stats) => {
-    if (!error && !stats.hasErrors()) {
-      console.log(stats.toString(serverConfig.stats));
-      return;
-    }
-
-    if (error) {
-      logMessage(error, 'error');
-    }
-
-    if (stats.hasErrors()) {
-      const info = stats.toJson();
-      logMessage('Server compilation errors:\n', 'error');
-      info.errors.forEach(e => console.log(e + '\n'));
-    }
+  const devMiddleware = webpackDevMiddleware(multiCompiler, {
+    publicPath: clientConfig.output.publicPath,
+    stats: clientConfig.stats,
+    watchOptions,
   });
+  app.use(devMiddleware);
+  app.use(webpackHotMiddleware(clientCompiler));
+  app.use('/static', express.static(paths.clientBuild));
+  app.listen(WEBPACK_PORT);
 
   // wait & check for errors on initial client and server builds
-  try {
-    await clientInitialBuild;
-  } catch (error) {
-    logMessage('Client initial build failed! ', 'error');
-  }
-  try {
-    await serverInitialBuild;
-  } catch (error) {
-    logMessage('Server initial build failed! ', 'error');
-  }
+  await new Promise((res, rej) => devMiddleware.waitUntilValid(() => res()));
 
   const script = nodemon({
     script: `${paths.serverBuild}/server.js`,
