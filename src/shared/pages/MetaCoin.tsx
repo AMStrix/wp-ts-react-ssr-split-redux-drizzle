@@ -58,7 +58,6 @@ class Interact extends React.Component<any> {
     this.setState({ account, dataKey });
   }
   handleSendCoin(vals: any) {
-    console.log('handleSendCoins', vals);
     const ammount = parseInt(vals.ammount, 10);
     const sendCoinDK = this.props.drizzle.contracts.MetaCoin.methods.sendCoin.cacheSend(
       vals.address,
@@ -67,7 +66,6 @@ class Interact extends React.Component<any> {
     this.setState({ sendCoinDK });
   }
   render() {
-    console.log(this.props.drizzle.contracts.MetaCoin);
     const {
       // accounts,
       // contracts,
