@@ -16,6 +16,14 @@ declare module '*.css' {
   export = classNames;
 }
 
+declare module '*.less' {
+  interface IClassNames {
+    [className: string]: string;
+  }
+  const classNames: IClassNames;
+  export = classNames;
+}
+
 declare module '*.svg' {
   const content: any;
   export default content;

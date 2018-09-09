@@ -7,14 +7,15 @@ export const ReactLogo = styled.img`
 `;
 
 export const Style = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  .ant-card {
-    width: 220px;
-    margin-bottom: 1em;
-  }
-  .ant-card + .ant-card {
-    margin-left: 1em;
+  > div {
+    display: flex;
+    .ant-card {
+      width: 220px;
+      margin-bottom: 1em;
+    }
+    .ant-card + .ant-card {
+      margin-left: 1em;
+    }
   }
 `;
 

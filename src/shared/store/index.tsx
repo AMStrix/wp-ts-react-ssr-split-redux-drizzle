@@ -18,6 +18,14 @@ interface Config {
   middleware: any[];
 }
 
+const doNotLog = [
+  'ACCOUNTS_FETCHED',
+  'ACCOUNT_BALANCE_FETCHED',
+  'ACCOUNT_BALANCES_FETCHED',
+  'SYNCING_ACCOUNTS',
+  'BLOCK_FOUND',
+];
+
 export const configureStore = (
   { initialState, middleware }: Config = { initialState: undefined, middleware: [] },
 ) => {
@@ -26,7 +34,12 @@ export const configureStore = (
   const sagaMiddleware = createSagaMiddleware();
   const extraMiddleware = [
     sagaMiddleware,
-    isDev && !isServer && createLogger({ collapsed: true }),
+    isDev &&
+      !isServer &&
+      createLogger({
+        collapsed: true,
+        predicate: (getState, action) => doNotLog.indexOf(action.type) === -1,
+      }),
   ].filter(Boolean);
   const store = createStore(
     rootReducer,
