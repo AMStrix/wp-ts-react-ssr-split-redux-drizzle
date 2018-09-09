@@ -58,10 +58,10 @@ class Interact extends React.Component<any> {
     this.setState({ account, dataKey });
   }
   handleSendCoin(vals: any) {
-    const ammount = parseInt(vals.ammount, 10);
+    const amount = parseInt(vals.amount, 10);
     const sendCoinDK = this.props.drizzle.contracts.MetaCoin.methods.sendCoin.cacheSend(
       vals.address,
-      ammount,
+      amount,
     );
     this.setState({ sendCoinDK });
   }
@@ -119,13 +119,13 @@ class MCFormInner extends React.Component<any> {
     const address = getFieldDecorator('address')(
       <Input placeholder="Send to address 0x..." style={{ width: '28em' }} />,
     );
-    const ammount = getFieldDecorator('ammount')(
+    const amount = getFieldDecorator('amount')(
       <Input placeholder="Amount" style={{ width: '6em' }} />,
     );
     return (
       <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item>{address}</Form.Item>
-        <Form.Item>{ammount}</Form.Item>
+        <Form.Item>{amount}</Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Send

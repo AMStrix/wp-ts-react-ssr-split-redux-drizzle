@@ -71,7 +71,15 @@ const start = async () => {
   const script = nodemon({
     script: `${paths.serverBuild}/server.js`,
     // todo: investigate why hot-updates are being generated for server build
-    ignore: ['src', 'scripts', 'config', './*.*', 'build/client', '*.hot-update.*'],
+    ignore: [
+      'src',
+      'scripts',
+      'config',
+      './*.*',
+      'build/client',
+      '*.hot-update.*',
+      'e2e',
+    ],
     verbose: true,
   });
 
