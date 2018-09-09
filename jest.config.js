@@ -1,25 +1,20 @@
 const paths = require('./config/paths');
 
+// good reference for ts-jest:
+// https://github.com/basarat/typescript-book/blob/master/docs/testing/jest.md
+
 module.exports = {
-    verbose: true,
-    collectCoverageFrom: ['src/**/*.{js,jsx,mjs}'],
-    setupFiles: [
-        '<rootDir>/node_modules/regenerator-runtime/runtime',
-        '<rootDir>/config/polyfills.js',
-    ],
-    setupTestFrameworkScriptFile: '<rootDir>config/jest/setup.js',
-    testMatch: [
-        '<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}',
-        '<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}',
-    ],
-    testEnvironment: 'node',
-    testURL: 'http://localhost',
-    transform: {
-        '^.+\\.(js|jsx|mjs)$': '<rootDir>/node_modules/babel-jest',
-        '^.+\\.css$': '<rootDir>/config/jest/cssTransform.js',
-        '^(?!.*\\.(js|jsx|mjs|css|json)$)': '<rootDir>/config/jest/fileTransform.js',
-    },
-    transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$'],
-    moduleDirectories: paths.resolveModules,
-    moduleFileExtensions: ['js', 'json', 'jsx', 'node', 'mjs'],
+  roots: ['<rootDir>/src'],
+  verbose: true,
+  setupTestFrameworkScriptFile: '<rootDir>/config/jest/setup.ts',
+  testMatch: ['<rootDir>/src/**/__tests__/**/*.{ts,tsx}'],
+  transform: {
+    '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest',
+    //'^.+\\.css$': '<rootDir>/config/jest/cssTransform.js',
+    '^(?!.*\\.(ts|tsx|js|jsx|css|json)$)': '<rootDir>/config/jest/fileTransform.js',
+  },
+  //transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(ts|tsx|js|jsx)$'],
+  //transformIgnorePatterns: ['<rootDir>/node_modules/(?!antd)'],
+  moduleDirectories: paths.resolveModules,
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };

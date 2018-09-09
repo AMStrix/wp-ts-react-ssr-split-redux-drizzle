@@ -1,7 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 
 import styled from 'styled-components';
 import { Row, Col, Icon } from 'antd';
+
+export const DEFAULT_LOADING = 'Loading...';
 
 interface Props {
   message?: string;
@@ -20,7 +22,7 @@ const PageLoading = (p: Props) => (
     <Col span={8} style={{ textAlign: 'center' }}>
       <SpinBox>
         <Icon type="loading" spin />
-        <span>{p.message || 'Loading...'}</span>
+        <span>{p.message || DEFAULT_LOADING}</span>
       </SpinBox>
     </Col>
   </Row>

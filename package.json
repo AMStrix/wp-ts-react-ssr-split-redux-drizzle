@@ -77,7 +77,6 @@
     "antd-iconfont": "^3.0.3",
     "autoprefixer": "^9.1.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0",
     "babel-plugin-dynamic-import-node": "^2.1.0",
     "babel-plugin-dynamic-import-webpack": "^1.0.2",
@@ -91,8 +90,6 @@
     "css-loader": "^1.0.0",
     "dotenv": "^6.0.0",
     "drizzle": "^1.2.3",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
     "express": "^4.16.3",
     "express-manifest-helpers": "^0.5.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -103,7 +100,6 @@
     "history": "^4.7.2",
     "husky": "^1.0.0-rc.13",
     "i18next": "^11.5.0",
-    "jest": "^23.4.2",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "lint-staged": "^7.2.0",
@@ -134,10 +130,8 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
-    "regenerator-runtime": "^0.12.1",
     "reselect": "^3.0.1",
     "rimraf": "^2.6.2",
-    "serve-static": "^1.13.2",
     "stats-webpack-plugin": "^0.6.2",
     "style-loader": "^0.23.0",
     "styled-components": "^3.4.5",
@@ -161,8 +155,16 @@
     "write-file-webpack-plugin": "^4.3.2"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.13",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/jest": "^23.3.2",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.5.0",
     "install-deps-postmerge": "^1.0.2",
+    "jest": "^23.5.0",
     "patch-package": "^5.1.1",
-    "postinstall-postinstall": "^1.0.0"
+    "postinstall-postinstall": "^1.0.0",
+    "react-test-renderer": "^16.5.0",
+    "ts-jest": "^23.1.4"
   }
 }
