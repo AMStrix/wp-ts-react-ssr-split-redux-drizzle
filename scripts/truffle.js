@@ -158,9 +158,9 @@ module.exports.ethereumCheck = () =>
         compile();
         logMessage('truffle migrate, please wait...', 'info');
         migrate();
+        fundWeb3v1();
       } else {
         logMessage('OK, Contracts have correct network id.', 'info');
       }
     })
-    .then(() => fundWeb3v1())
     .catch(e => logMessage('WARNING: ethereum setup has a problem: ' + e, 'error'));
