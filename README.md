@@ -12,11 +12,12 @@
 * antd
 * css & less support
 * i18next
+* e2e testing via Cypress
+* unit testing via jest/enzyme
 
 ### Current issues
-* HMR sometimes gets confused by updates to dynamically imported (split) modules. Looking into a fix.
-* SSR in dev mode doesn't reference styles initially, so there is an ugly moment until the css gets pulled. (not an issue in prod build) (react-universal-components may be a solution)
-* Full vendor CSS is bundled so SSR can reference it. Avoiding no style initial loads. Looking into https://github.com/faceyspacey/react-universal-component as a fix.
+* SSR in dev mode doesn't reference styles initially, so there is an ugly moment until the css gets pulled. (not an issue in prod build)
+* Full vendor CSS is bundled so SSR can reference it. Avoiding no style initial loads, but missing out on splitting.
 
 Requires **Node v8** & **yarn**
 
