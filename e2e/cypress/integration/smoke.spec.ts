@@ -1,6 +1,7 @@
 /// <reference types="cypress"/>
-import * as Web3 from 'web3';
+import Web3 = require('web3');
 
+// @ts-ignore
 import * as truffleConfig from '../../../truffle';
 
 const makeWeb3Conn = () => {
@@ -31,7 +32,7 @@ describe('home', () => {
     cy.title().should('include', 'MetaCoin');
     cy.get('#address').should('exist');
     cy.window()
-      .then(w => w.web3.eth.getAccounts())
+      .then(w => (w as any).web3.eth.getAccounts())
       .then(console.log);
   });
 });
