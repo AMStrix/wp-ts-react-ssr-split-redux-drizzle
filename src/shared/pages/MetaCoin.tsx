@@ -36,70 +36,55 @@ class MetaCoin extends React.Component<any> {
 const mapStateToProps = (state: any) => ({ state });
 export default connect(mapStateToProps)(translate()(MetaCoin));
 
-const initialState = { account: '', dataKey: '', sendCoinDK: '' };
+const initialState = { account: '', dataKey: '', sendCoinSID: -1, sendCoinStatus: '' };
 type State = Readonly<typeof initialState>;
 
 // tslint:disable-next-line:max-classes-per-file
 class Interact extends React.Component<any> {
   readonly state: State = initialState;
   componentDidMount() {
-    this.handleGetBalance();
+    this.triggerGetBalance();
   }
   componentDidUpdate(prevProps: any, prevState: State) {
     if (prevProps.state.accounts[0] !== this.props.state.accounts[0]) {
-      this.handleGetBalance();
+      this.triggerGetBalance();
     }
   }
-  handleGetBalance() {
+  triggerGetBalance() {
     const account = this.props.state.accounts[0];
-    const dataKey = this.props.drizzle.contracts.MetaCoin.methods.getBalance.cacheCall(
-      account,
-    );
-    this.setState({ account, dataKey });
+    console.log('trigger getBalance for ', account);
+    this.props.drizzle.contracts.MetaCoin.methods.getBalance.cacheCall(account);
   }
   handleSendCoin(vals: any) {
     const amount = parseInt(vals.amount, 10);
-    const sendCoinDK = this.props.drizzle.contracts.MetaCoin.methods.sendCoin.cacheSend(
+    this.props.drizzle.contracts.MetaCoin.methods.sendCoin.cacheSend(
       vals.address,
       amount,
+      // note: important to set from address
+      // otherwise MM will use the acct that initially sent,
+      // even if subsequent sends happen after switching accts
+      { from: this.props.state.accounts[0] },
     );
-    this.setState({ sendCoinDK });
   }
   render() {
     const {
-      // accounts,
-      // contracts,
-      drizzleStatus: { initialized },
-    } = this.props.state;
-    let getBalanceRes: string;
-    if (!(this.state.dataKey in this.props.state.contracts.MetaCoin.getBalance)) {
-      getBalanceRes = 'loading...';
-    } else {
-      getBalanceRes = this.props.state.contracts.MetaCoin.getBalance[this.state.dataKey]
-        .value;
-    }
-    let sendCoinRes: string = 'inactive';
-    if (this.state.sendCoinDK && this.props.state.contracts.MetaCoin.sendCoin) {
-      if (!(this.state.sendCoinDK in this.props.state.contracts.MetaCoin.sendCoin)) {
-        sendCoinRes = 'loading...';
-      } else {
-        sendCoinRes = this.props.state.contracts.MetaCoin.sendCoin[this.state.sendCoinDK]
-          .value;
-      }
-    }
-    if (!initialized) return <PageLoading message="Initializing..." />;
+      status,
+      account,
+      balance,
+      getting,
+      sending,
+      sendingAmount,
+    } = this.props.state.metaCoin;
+    if (status !== 'ready') return <PageLoading message="Initializing..." />;
     return (
       <div>
         <div>
-          active account: <b>{this.props.state.accounts[0]}</b>
+          active account: <b>{account}</b>
         </div>
+        <div>balance: {getting ? 'getting...' : balance}</div>
         <div>
-          drizzle.contracts: {Object.keys(this.props.drizzle.contracts).join(', ')}
+          sendCoinStatus: {sending ? `Sending ${sendingAmount} coins...` : 'Idle...'}
         </div>
-        <div>dataKey: {this.state.dataKey}</div>
-        <div>balance: {getBalanceRes}</div>
-        <div>sendCoinDK: {this.state.sendCoinDK}</div>
-        <div>sendCoinRes: {sendCoinRes}</div>
         <MCForm onSendCoins={(vals: any) => this.handleSendCoin(vals)} />
       </div>
     );
