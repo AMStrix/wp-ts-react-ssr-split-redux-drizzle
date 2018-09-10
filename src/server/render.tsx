@@ -6,10 +6,8 @@ import { Provider } from 'react-redux';
 import IntlProvider from '../shared/i18n/IntlProvider';
 import { getLoadableState } from 'loadable-components/server';
 import { ServerStyleSheet } from 'styled-components';
-import { createMemoryHistory } from 'history';
-import { routerMiddleware } from 'react-router-redux';
 
-import { configureStore } from '../shared/store';
+import { makeStore } from '../shared/store';
 import DrizzleContext from '../shared/DrizzleContext';
 import Html from './components/HTML';
 import App from '../shared/App';
@@ -18,14 +16,7 @@ import App from '../shared/App';
 // https://reacttraining.com/react-router/web/guides/redux-integration
 
 const serverRenderer = () => async (req: Request, res: Response) => {
-  const history = createMemoryHistory({
-    initialEntries: [req.url],
-  });
-  const store = configureStore({
-    initialState: undefined,
-    middleware: [routerMiddleware(history)],
-  });
-
+  const store = makeStore(req.url);
   const sheet = new ServerStyleSheet();
   const reactApp = (
     <Provider store={store}>

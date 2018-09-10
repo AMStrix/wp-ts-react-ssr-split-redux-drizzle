@@ -2,6 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
+import { createMemoryHistory, createBrowserHistory } from 'history';
+import { routerMiddleware } from 'react-router-redux';
 
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
@@ -13,11 +15,6 @@ export const isServer = !(
   window.document.createElement
 );
 
-interface Config {
-  initialState: any;
-  middleware: any[];
-}
-
 const doNotLog = [
   'ACCOUNTS_FETCHED',
   'ACCOUNT_BALANCE_FETCHED',
@@ -26,26 +23,58 @@ const doNotLog = [
   'BLOCK_FOUND',
 ];
 
-export const configureStore = (
-  { initialState, middleware }: Config = { initialState: undefined, middleware: [] },
-) => {
+const makeHistory = (path?: string) => {
+  let history;
+  if (isServer && path) {
+    history = createMemoryHistory({ initialEntries: [path] });
+  } else {
+    if (window && (window as any)._history) {
+      history = (window as any)._history;
+    } else {
+      history = createBrowserHistory();
+      (window as any)._history = history;
+    }
+  }
+  return history;
+};
+
+const getInitialState = () => {
+  let initialState;
+  if (isServer) {
+    initialState = {};
+  } else {
+    initialState = window && (window as any).__PRELOADED_STATE__;
+  }
+  return initialState;
+};
+
+export const makeStore = (path?: string) => {
+  if (!isServer && (window as any).store) return (window as any).store;
+  const history = makeHistory(path);
+  const initialState = getInitialState();
+
   const devtools = isDev && !isServer && composeWithDevTools({});
   const composeEnhancers = devtools || compose;
   const sagaMiddleware = createSagaMiddleware();
-  const extraMiddleware = [
-    sagaMiddleware,
-    isDev &&
-      !isServer &&
-      createLogger({
-        collapsed: true,
-        predicate: (getState, action) => doNotLog.indexOf(action.type) === -1,
-      }),
-  ].filter(Boolean);
+  const loggerMiddleware = createLogger({
+    collapsed: true,
+    predicate: (getState, action) => doNotLog.indexOf(action.type) === -1,
+  });
+
+  const middleware = [routerMiddleware(history), sagaMiddleware];
+  if (isDev && !isServer) middleware.push(loggerMiddleware);
+
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(...middleware.concat(extraMiddleware))),
+    composeEnhancers(applyMiddleware(...middleware)),
   );
+
+  (store as any)._history = history;
+
+  if (!isServer) {
+    (window as any).store = store;
+  }
 
   let sagaTask = sagaMiddleware.run(rootSaga);
   sagaTask.done.catch(e => {
@@ -69,4 +98,4 @@ export const configureStore = (
   return store;
 };
 
-export default configureStore;
+export default makeStore;
