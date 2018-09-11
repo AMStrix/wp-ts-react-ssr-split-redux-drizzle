@@ -73,6 +73,7 @@
     "@types/redux-logger": "^3.0.6",
     "@types/webpack": "^4.4.11",
     "@types/webpack-env": "^1.13.6",
+    "@types/winston": "^2.4.4",
     "antd": "^3.8.4",
     "antd-iconfont": "^3.0.3",
     "autoprefixer": "^9.1.0",
@@ -152,6 +153,7 @@
     "webpack-hot-middleware": "^2.22.3",
     "webpack-manifest-plugin": "^2.0.3",
     "webpack-node-externals": "^1.7.2",
+    "winston": "^3.1.0",
     "write-file-webpack-plugin": "^4.3.2"
   },
   "devDependencies": {

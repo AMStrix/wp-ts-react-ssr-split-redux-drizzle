@@ -52,7 +52,6 @@ class Interact extends React.Component<any> {
   }
   triggerGetBalance() {
     const account = this.props.state.accounts[0];
-    console.log('trigger getBalance for ', account);
     this.props.drizzle.contracts.MetaCoin.methods.getBalance.cacheCall(account);
   }
   handleSendCoin(vals: any) {

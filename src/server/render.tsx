@@ -7,6 +7,7 @@ import IntlProvider from '../shared/i18n/IntlProvider';
 import { getLoadableState } from 'loadable-components/server';
 import { ServerStyleSheet } from 'styled-components';
 
+import log from './log';
 import { makeStore } from '../shared/store';
 import DrizzleContext from '../shared/DrizzleContext';
 import Html from './components/HTML';
@@ -36,9 +37,8 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     loadableState = await getLoadableState(reactApp);
   } catch (e) {
     const disp = `Error getting loadable state for SSR`;
-    console.log(disp);
-    console.log(e);
-    return res.send(disp + ' (more info in server logs)');
+    log.error(`${disp} \n ${e}`);
+    return res.status(404).send(disp + ' (more info in server logs)');
   }
   // 2. styled components will gather styles & wrap in provider
   const styleConnectedApp = sheet.collectStyles(reactApp);
@@ -53,8 +53,8 @@ const serverRenderer = () => async (req: Request, res: Response) => {
   } catch (e) {
     const disp =
       'ERROR: Could not load client manifest.json, there was probably a client build error.';
-    console.log(disp);
-    return res.send(disp);
+    log.error(disp);
+    return res.status(500).send(disp);
   }
 
   return res.send(

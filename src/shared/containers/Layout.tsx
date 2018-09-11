@@ -9,7 +9,6 @@ import routes, { byPath } from '../routes';
 
 class Layout extends React.Component<RouteComponentProps<any>> {
   render() {
-    // console.log(JSON.stringify(this.props, null, 2));
     const {
       location: { pathname },
     } = this.props;

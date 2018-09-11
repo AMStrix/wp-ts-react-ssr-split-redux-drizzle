@@ -6,17 +6,18 @@ import manifestHelpers from 'express-manifest-helpers';
 import * as bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
+import log from './log';
 import serverRender from './render';
 // @ts-ignore
 import * as paths from '../../config/paths';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 dotenv.config();
 
 const app = express();
 
-// Use Nginx or Apache to serve static assets in production or remove the if() around the following
-// lines to use the express.static middleware to serve assets for production (not recommended!)
-if (process.env.NODE_ENV === 'development') {
+if (isDev) {
   app.use(
     paths.publicPath,
     express.static(path.join(paths.clientBuild, paths.publicPath)),
@@ -24,8 +25,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/favicon.ico', (req, res) => {
     res.send('');
   });
-} else if (process.env.NODE_ENV === 'production') {
-  console.log('Warning: PRODUCTION mode, serving static assets from node server.');
+} else {
+  log.warn('PRODUCTION mode, serving static assets from node server.');
   app.use(
     paths.publicPath,
     express.static(path.join(paths.clientBuild, paths.publicPath)),
@@ -51,8 +52,8 @@ app.use(
 
 app.use(serverRender());
 
-// eslint-disable-next-line no-unused-vars
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  log.error(err);
   return res.status(404).json({
     status: 'error',
     message: err.message,
@@ -76,15 +77,13 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(
-    `[${new Date().toISOString()}]` +
-      chalk.blue(` App is running: 🌎 http://localhost:${process.env.PORT || 3000} `),
-  );
-});
-
-process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
-  // application specific logging, throwing an error, or other logic here
+  if (isDev) {
+    console.log(
+      chalk.blue(`App is running: 🌎 http://localhost:${process.env.PORT || 3000} `),
+    );
+  } else {
+    log.info(`Server started on port ${process.env.PORT}`);
+  }
 });
 
 export default app;

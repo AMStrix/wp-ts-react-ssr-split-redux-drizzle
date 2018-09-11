@@ -4,7 +4,7 @@ const net = require('net');
 const logMessage = (message, level = 'info') => {
   const colors = { error: 'red', warning: 'yellow', info: 'blue' };
   colors[undefined] = 'white';
-  console.log(`[${new Date().toISOString()}] ${chalk[colors[level]](message)}`);
+  console.log(`${chalk[colors[level]](message)}`);
 };
 
 const compilerPromise = compiler => {
