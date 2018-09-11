@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const { StatsWriterPlugin } = require('webpack-stats-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const env = require('../env')();
@@ -14,14 +15,33 @@ const client = [
   }),
   new MiniCssExtractPlugin({
     filename:
-      process.env.NODE_ENV === 'development' ? '[name].css' : '[name].[contenthash].css',
+      process.env.NODE_ENV === 'development' ? '[name].css' : '[name].[hash:8].css',
     chunkFilename:
-      process.env.NODE_ENV === 'development' ? '[id].css' : '[id].[contenthash].css',
+      process.env.NODE_ENV === 'development'
+        ? '[name].chunk.css'
+        : '[name].[chunkhash:8].chunk.css',
   }),
   new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   new ManifestPlugin({
     fileName: 'manifest.json',
     writeToFileEmit: true, // fixes initial-only writing from WriteFileWebpackPlugin
+  }),
+  new StatsWriterPlugin({
+    fileName: 'stats.json',
+    fields: null,
+    transform(data) {
+      const trans = {};
+      trans.modules = data.modules.map(m => ({
+        id: m.id,
+        chunks: m.chunks,
+        reasons: m.reasons,
+      }));
+      trans.chunks = data.chunks.map(c => ({
+        id: c.id,
+        files: c.files,
+      }));
+      return JSON.stringify(trans, null, 2);
+    },
   }),
 ];
 

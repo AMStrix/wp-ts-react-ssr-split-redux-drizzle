@@ -32,12 +32,11 @@ module.exports = {
   },
   optimization: {
     namedModules: true,
-    noEmitOnErrors: true,
+    noEmitOnErrors: false,
     // concatenateModules: true,
     // below settings bundle all vendor css in one file
     // this allows SSR to render a reference to the hashed css
     // if commons is split by module then flickering may occur on load
-    // TODO: look into ReactUniversalComponent for CSS SSR & Splitting
     splitChunks: {
       cacheGroups: {
         commons: {

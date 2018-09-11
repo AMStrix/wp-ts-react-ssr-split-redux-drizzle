@@ -37,7 +37,6 @@ if (isDev) {
 }
 
 app.use(cors());
-
 app.use(bodyParser.json());
 
 const manifestPath = path.join(paths.clientBuild, paths.publicPath);
@@ -84,6 +83,15 @@ app.listen(process.env.PORT || 3000, () => {
   } else {
     log.info(`Server started on port ${process.env.PORT}`);
   }
+});
+
+process.on('unhandledRejection', (reason, p) => {
+  log.error(`Unhandled promise rejection: \n${reason}`);
+  process.exit(1);
+});
+process.on('uncaughtException', error => {
+  log.error(`Uncaught exception: \n${error}`);
+  process.exit(1);
 });
 
 export default app;

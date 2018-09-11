@@ -13,6 +13,46 @@ import DrizzleContext from '../shared/DrizzleContext';
 import Html from './components/HTML';
 import App from '../shared/App';
 
+import fs from 'fs';
+import path from 'path';
+// @ts-ignore
+import * as paths from '../../config/paths';
+const isDev = process.env.NODE_ENV === 'development';
+
+let cachedStats: any;
+const getStats = () =>
+  new Promise((res, rej) => {
+    if (!isDev && cachedStats) {
+      res(cachedStats);
+      return;
+    }
+    const statsPath = path.join(paths.clientBuild, paths.publicPath, 'stats.json');
+    fs.readFile(statsPath, (e, d) => {
+      if (e) {
+        rej(e);
+        return;
+      }
+      cachedStats = JSON.parse(d.toString());
+      res(cachedStats);
+    });
+  });
+
+const chunkExtractFromLoadables = (loadableIds: string[]) =>
+  getStats().then((stats: any) => {
+    const mods = stats.modules.filter(
+      (m: any) =>
+        m.reasons.filter((r: any) => loadableIds.indexOf(r.userRequest) > -1).length > 0,
+    );
+    const chunks = mods.reduce((a: any[], m: any) => a.concat(m.chunks), []);
+    const files = stats.chunks
+      .filter((c: any) => chunks.indexOf(c.id) > -1)
+      .reduce((a: string[], c: any) => a.concat(c.files), []);
+    return {
+      css: files.filter((f: string) => /.css$/.test(f)),
+      js: files.filter((f: string) => /.js$/.test(f)),
+    };
+  });
+
 // react-router recommends agains redux - router integration, perhaps remove?
 // https://reacttraining.com/react-router/web/guides/redux-integration
 
@@ -32,9 +72,13 @@ const serverRenderer = () => async (req: Request, res: Response) => {
   );
 
   let loadableState;
+  let loadableFiles;
   // 1. loadable state will render dynamic imports
   try {
     loadableState = await getLoadableState(reactApp);
+    loadableFiles = await chunkExtractFromLoadables(
+      loadableState.tree.children.map((c: any) => c.id),
+    );
   } catch (e) {
     const disp = `Error getting loadable state for SSR`;
     log.error(`${disp} \n ${e}`);
@@ -57,19 +101,20 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     return res.status(500).send(disp);
   }
 
+  const cssFiles = ['bundle.css', 'vendor.css', ...loadableFiles.css]
+    .map(f => res.locals.assetPath(f))
+    .filter(Boolean);
+  const jsFiles = [...loadableFiles.js, 'bundle.js', 'vendor.js']
+    .map(f => res.locals.assetPath(f))
+    .filter(Boolean);
+
   return res.send(
     '<!doctype html>' +
       renderToString(
         <Html
-          css={[
-            res.locals.assetPath('bundle.css'),
-            res.locals.assetPath('vendor.css'),
-          ].filter(Boolean)}
+          css={cssFiles}
           styleElements={styleElements}
-          scripts={[
-            res.locals.assetPath('bundle.js'),
-            res.locals.assetPath('vendor.js'),
-          ].filter(Boolean)}
+          scripts={jsFiles}
           state={state}
           loadableStateScript={loadableState.getScriptContent()}
         >
