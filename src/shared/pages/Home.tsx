@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Helmet } from 'react-helmet';
+import loadable from 'loadable-components';
 
-import EthInit from '../components/EthInit';
+export const EthInit = loadable(() => import('../components/EthInit'));
 
 class Home extends React.Component<any> {
   render() {

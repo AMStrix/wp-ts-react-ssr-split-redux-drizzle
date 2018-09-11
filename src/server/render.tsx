@@ -37,8 +37,19 @@ const getStats = () =>
     });
   });
 
-const chunkExtractFromLoadables = (loadableIds: string[]) =>
+const extractLoadableIds = (tree: any): string[] => {
+  const ids = (tree.id && [tree.id]) || [];
+  if (tree.children) {
+    return tree.children
+      .reduce((a: string[], c: any) => a.concat(extractLoadableIds(c)), [])
+      .concat(ids);
+  }
+  return ids;
+};
+
+const chunkExtractFromLoadables = (loadableState: any) =>
   getStats().then((stats: any) => {
+    const loadableIds = extractLoadableIds(loadableState.tree);
     const mods = stats.modules.filter(
       (m: any) =>
         m.reasons.filter((r: any) => loadableIds.indexOf(r.userRequest) > -1).length > 0,
@@ -76,9 +87,7 @@ const serverRenderer = () => async (req: Request, res: Response) => {
   // 1. loadable state will render dynamic imports
   try {
     loadableState = await getLoadableState(reactApp);
-    loadableFiles = await chunkExtractFromLoadables(
-      loadableState.tree.children.map((c: any) => c.id),
-    );
+    loadableFiles = await chunkExtractFromLoadables(loadableState);
   } catch (e) {
     const disp = `Error getting loadable state for SSR`;
     log.error(`${disp} \n ${e}`);
