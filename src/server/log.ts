@@ -1,27 +1,58 @@
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
+// @ts-ignore
+import * as paths from '../../config/paths';
+const { combine, timestamp, prettyPrint, printf, colorize } = format;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const format = winston.format.combine(
-  winston.format.timestamp({ format: 'YY/MM/DD HH:mm:ss' }),
-  winston.format.printf(info => `${info.timestamp}|${info.level}\t${info.message}`),
+const custom = combine(
+  timestamp({ format: 'YY/MM/DD HH:mm:ss' }),
+  colorize(),
+  printf(info => `${info.timestamp}[${info.level}]  ${info.message}`),
 );
 
-const log = winston.createLogger({
-  level: (isProduction && 'warn') || 'verbose',
-  format,
-  transports: [
-    // new winston.transports.File({ filename: 'logs/verbose.log', level: 'verbose' }),
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-  ],
+const enumerateErrorFormat = format((info: any) => {
+  if (info.message instanceof Error) {
+    console.log('A');
+    info.message = Object.assign(
+      {
+        message: info.message.message,
+        stack: info.message.stack,
+      },
+      info.message,
+    );
+  }
+  if (info instanceof Error) {
+    return Object.assign(
+      {
+        message: info.message,
+        stack: info.stack,
+      },
+      info,
+    );
+  }
+  return info;
 });
 
-if (!isProduction) {
-  log.add(
-    new winston.transports.Console({
-      level: 'verbose',
+// levels: error, warn, info, verbose, debug, silly
+const log = createLogger({
+  level: 'verbose',
+  exitOnError: true,
+  format: combine(enumerateErrorFormat(), timestamp(), prettyPrint()),
+  transports: [
+    new transports.File({
+      filename: `${paths.logs}/app.log`,
+      level: 'info',
+      handleExceptions: true,
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
     }),
-  );
-}
+    new transports.Console({
+      level: 'verbose',
+      handleExceptions: true,
+      format: custom,
+    }),
+  ],
+});
 
 export default log;

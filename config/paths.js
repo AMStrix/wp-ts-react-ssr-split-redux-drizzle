@@ -17,6 +17,7 @@ const paths = {
   srcShared: resolveApp('src/shared'),
   publicPath: '/static/',
   contractsBuild: resolveApp('build/contracts'),
+  logs: resolveApp('logs'),
 };
 
 paths.resolveModules = [

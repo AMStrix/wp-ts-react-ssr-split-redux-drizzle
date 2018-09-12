@@ -90,8 +90,9 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     loadableFiles = await chunkExtractFromLoadables(loadableState);
   } catch (e) {
     const disp = `Error getting loadable state for SSR`;
-    log.error(`${disp} \n ${e}`);
-    return res.status(404).send(disp + ' (more info in server logs)');
+    e.message = disp + ' :' + e.message;
+    log.error(e);
+    return res.status(500).send(disp + ' (more info in server logs)');
   }
   // 2. styled components will gather styles & wrap in provider
   const styleConnectedApp = sheet.collectStyles(reactApp);

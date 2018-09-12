@@ -739,7 +739,14 @@
     "@types/node" "*"
     "@types/range-parser" "*"
 
-"@types/express@^4.16.0":
+"@types/express-winston@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/express-winston/-/express-winston-3.0.0.tgz#9bfe0ee65f69901fb240b4e374bbd811a2bd8366"
+  dependencies:
+    "@types/express" "*"
+    winston "^3.0.0"
+
+"@types/express@*", "@types/express@^4.16.0":
   version "4.16.0"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.16.0.tgz#6d8bc42ccaa6f35cf29a2b7c3333cb47b5a32a19"
   dependencies:
@@ -4118,6 +4125,13 @@ express-manifest-helpers@^0.5.0:
   resolved "https://registry.yarnpkg.com/express-manifest-helpers/-/express-manifest-helpers-0.5.0.tgz#8dfbf5212ec6a8f94d30d94c6a4c97ede2cb0a07"
   dependencies:
     lodash "^3.9.1"
+
+express-winston@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/express-winston/-/express-winston-3.0.0.tgz#4aaf495709bec875f81ae6c3fa99f550e4a544d9"
+  dependencies:
+    chalk "^2.4.1"
+    lodash "^4.17.10"
 
 express@^4.14.0, express@^4.16.2, express@^4.16.3:
   version "4.16.3"
@@ -11600,7 +11614,7 @@ winston-transport@^4.2.0:
     readable-stream "^2.3.6"
     triple-beam "^1.2.0"
 
-winston@*, winston@^3.1.0:
+winston@*, winston@^3.0.0, winston@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/winston/-/winston-3.1.0.tgz#80724376aef164e024f316100d5b178d78ac5331"
   dependencies:

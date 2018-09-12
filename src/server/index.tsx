@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import * as bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import expressWinston from 'express-winston';
 
 import log from './log';
 import serverRender from './render';
@@ -16,6 +17,9 @@ const isDev = process.env.NODE_ENV === 'development';
 dotenv.config();
 
 const app = express();
+
+// log requests
+app.use(expressWinston.logger({ winstonInstance: log }));
 
 if (isDev) {
   app.use(
@@ -74,6 +78,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         ),
   });
 });
+
+app.use(expressWinston.errorLogger({ winstonInstance: log }));
 
 app.listen(process.env.PORT || 3000, () => {
   if (isDev) {
