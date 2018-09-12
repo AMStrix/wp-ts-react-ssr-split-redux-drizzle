@@ -90,7 +90,7 @@ const serverRenderer = () => async (req: Request, res: Response) => {
     loadableFiles = await chunkExtractFromLoadables(loadableState);
   } catch (e) {
     const disp = `Error getting loadable state for SSR`;
-    e.message = disp + ' :' + e.message;
+    e.message = disp + ': ' + e.message;
     log.error(e);
     return res.status(500).send(disp + ' (more info in server logs)');
   }

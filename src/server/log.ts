@@ -3,8 +3,6 @@ import { createLogger, format, transports } from 'winston';
 import * as paths from '../../config/paths';
 const { combine, timestamp, prettyPrint, printf, colorize } = format;
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const custom = combine(
   timestamp({ format: 'YY/MM/DD HH:mm:ss' }),
   colorize(),
@@ -13,7 +11,6 @@ const custom = combine(
 
 const enumerateErrorFormat = format((info: any) => {
   if (info.message instanceof Error) {
-    console.log('A');
     info.message = Object.assign(
       {
         message: info.message.message,

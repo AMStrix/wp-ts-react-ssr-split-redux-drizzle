@@ -65,7 +65,7 @@ const start = async () => {
   app.use('/static', express.static(paths.clientBuild));
   app.listen(WEBPACK_PORT);
 
-  // wait & check for errors on initial client and server builds
+  // await first build...
   await new Promise((res, rej) => devMiddleware.waitUntilValid(() => res()));
 
   const script = nodemon({
