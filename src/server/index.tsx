@@ -82,22 +82,12 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use(expressWinston.errorLogger({ winstonInstance: log }));
 
 app.listen(process.env.PORT || 3000, () => {
+  const port = process.env.PORT || 3000;
   if (isDev) {
-    console.log(
-      chalk.blue(`App is running: 🌎 http://localhost:${process.env.PORT || 3000} `),
-    );
+    console.log(chalk.blue(`App is running: 🌎 http://localhost:${port} `));
   } else {
-    log.info(`Server started on port ${process.env.PORT}`);
+    log.info(`Server started on port ${port}`);
   }
-});
-
-process.on('unhandledRejection', (reason, p) => {
-  log.error(`Unhandled promise rejection: \n${reason}`);
-  process.exit(1);
-});
-process.on('uncaughtException', error => {
-  log.error(`Uncaught exception: \n${error}`);
-  process.exit(1);
 });
 
 export default app;
