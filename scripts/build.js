@@ -5,52 +5,25 @@ const webpackConfig = require('../config/webpack.config.js')(
   process.env.NODE_ENV || 'production',
 );
 const paths = require('../config/paths');
-const { logMessage, compilerPromise } = require('./utils');
+const { logMessage } = require('./utils');
 
 const build = async () => {
   rimraf.sync(paths.clientBuild);
   rimraf.sync(paths.serverBuild);
 
+  logMessage('Compiling, please wait...');
+
   const [clientConfig, serverConfig] = webpackConfig;
   const multiCompiler = webpack([clientConfig, serverConfig]);
-
-  const clientCompiler = multiCompiler.compilers[0];
-  const serverCompiler = multiCompiler.compilers[1];
-
-  const clientPromise = compilerPromise(clientCompiler);
-  const serverPromise = compilerPromise(serverCompiler);
-
-  serverCompiler.run((error, stats) => {
-    error && console.log(error);
-    if (stats) {
-      console.log(stats.toString(serverConfig.stats));
-      return;
-    }
-  });
-
-  clientCompiler.run((error, stats) => {
-    error && console.log(error);
+  multiCompiler.run((error, stats) => {
     if (stats) {
       console.log(stats.toString(clientConfig.stats));
-      return;
+    }
+    if (error) {
+      logMessage('Compile error', error);
+      console.error(error);
     }
   });
-
-  // wait until client and server are compiled
-  try {
-    await serverPromise;
-    logMessage('Server done!', 'info');
-  } catch (error) {
-    logMessage('Error compiling server: ', 'error');
-    console.log(error);
-  }
-  try {
-    await clientPromise;
-    logMessage('Client done!', 'info');
-  } catch (error) {
-    logMessage('Error compiling client: ', 'error');
-    console.log(error);
-  }
 };
 
 build();

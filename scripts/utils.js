@@ -7,17 +7,6 @@ const logMessage = (message, level = 'info') => {
   console.log(`${chalk[colors[level]](message)}`);
 };
 
-const compilerPromise = compiler => {
-  return new Promise((resolve, reject) => {
-    compiler.plugin('done', stats => {
-      if (!stats.hasErrors()) {
-        return resolve();
-      }
-      return reject();
-    });
-  });
-};
-
 const isPortTaken = port =>
   new Promise((res, rej) => {
     const tester = net
@@ -34,6 +23,5 @@ const isPortTaken = port =>
 
 module.exports = {
   logMessage,
-  compilerPromise,
   isPortTaken,
 };
